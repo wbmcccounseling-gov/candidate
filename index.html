@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Portal - West Bengal Medical Counseling Committee (WBMCC)</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #0f172a;
+            --accent: #0284c7;
+            --bg-gray: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            background-color: var(--secondary);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .navbar-brand i {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+        }
+
+        .btn-logout {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* Animated Welcome Banner */
+        .welcome-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            animation: fadeInDown 1s ease-out, glow 3s ease-in-out infinite alternate;
+        }
+
+        .welcome-header p {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        /* Sidebar Candidate Details */
+        .sidebar-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            background-color: #f1f5f9;
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 10px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .score-badges {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 1rem;
+            background: #eff6ff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .badge-box {
+            text-align: center;
+            background: white;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+        }
+
+        .badge-box .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .badge-box .value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .details-list {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 8px;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .detail-item .title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-item .info {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-top: 2px;
+        }
+
+        /* Main Content Grid */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        /* Message Center */
+        .notice-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .notice-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .notice-item:hover {
+            transform: translateX(4px);
+            background: #f1f5f9;
+        }
+
+        .notice-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notice-info i {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .notice-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-link:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Chatbot Section */
+        .chat-portal {
+            display: flex;
+            flex-direction: column;
+            height: 380px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .message-user {
+            align-self: flex-end;
+            background-color: var(--primary);
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message-bot {
+            align-self: flex-start;
+            background-color: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 12px;
+            background: white;
+            border-top: 1px solid var(--border);
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chat-input-area input:focus {
+            border-color: var(--primary-light);
+        }
+
+        .btn-send {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-send:hover {
+            background-color: #0369a1;
+        }
+
+        /* Countdown Overlay Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .countdown-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem auto;
+            border: 4px solid var(--primary-light);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary);
+            color: #94a3b8;
+            padding: 2rem 0;
+            margin-top: auto;
+            border-top: 1px solid #334155;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-col h3 {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .footer-col p {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .footer-col i {
+            width: 20px;
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>West Bengal Medical Counseling Committee (WBMCC)</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn">
+            <i class="fa-solid fa-right-from-bracket"></i> Candidate Log Out
+        </button>
+    </nav>
+
+    <!-- Animated Welcome Header -->
+    <header class="welcome-header">
+        <h1>Welcome Shibayan Ray</h1>
+        <p>NEET (UG) 2026 Counselling & Allocation Dashboard for MBBS/BDS Courses 2026 in West Bengal Deemed Medical Colleges</p>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Side Box: Candidate Details -->
+        <aside class="sidebar-card">
+            <div class="sidebar-header">
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h2>Shibayan Ray</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Candidate Profile</p>
+            </div>
+
+            <div class="score-badges">
+                <div class="badge-box">
+                    <div class="label">NEET SCORE</div>
+                    <div class="value">695</div>
+                </div>
+                <div class="badge-box">
+                    <div class="label">ALL INDIA RANK</div>
+                    <div class="value">#218</div>
+                </div>
+            </div>
+
+            <div class="details-list">
+                <div class="detail-item">
+                    <span class="title">Application Number</span>
+                    <span class="info">260410025410</span>
+                </div>
+                <div class="detail-item">
+                    <span class="title">Roll Number</span>
+                    <span class="info">4608309556</span>
+                </div>
+                <div class="detail-item">
+                    <span class="title">Father's Name</span>
+                    <span class="info">Shibaprasad Ray</span>
+                </div>
+                <div class="detail-item">
+                    <span class="title">Mother's Name</span>
+                    <span class="info">Paramita Ray Sur</span>
+                </div>
+                <div class="detail-item">
+                    <span class="title">Category</span>
+                    <span class="info">General UR</span>
+                </div>
+                <div class="detail-item">
+                    <span class="title">Date of Birth</span>
+                    <span class="info">19/07/2002</span>
+                </div>
+                <div class="detail-item">
+                    <span class="title">Residency</span>
+                    <span class="info">West Bengal</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <!-- Message Center Card -->
+            <section class="card">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-bullhorn"></i> Message Center & Announcements
+                </h2>
+                <div class="notice-list">
+                    
+                    <!-- Notice Item 1 -->
+                    <div class="notice-item">
+                        <div class="notice-info">
+                            <i class="fa-solid fa-file-lines"></i>
+                            <span class="notice-text">1. Registration Notice</span>
+                        </div>
+                        <a href="https://www.instagram.com/?hl=en" target="_blank" class="btn-link">
+                            View Notice <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <!-- Notice Item 2 -->
+                    <div class="notice-item">
+                        <div class="notice-info">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span class="notice-text">2. Registration Confirmation PDF</span>
+                        </div>
+                        <a href="https://www.instagram.com/?hl=en" target="_blank" class="btn-link">
+                            Download PDF <i class="fa-solid fa-download"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Complaint Writing Chatbot Portal -->
+            <section class="card">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-comments-question-check"></i> Complaint Writing Chat Bot Portal
+                </h2>
+                
+                <div class="chat-portal">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message-bubble message-bot">
+                            Hello Shibayan! Welcome to the Complaint Helpdesk. Please write your query or grievance below.
+                        </div>
+                    </div>
+                    <form class="chat-input-area" id="chatForm">
+                        <input type="text" id="chatInput" placeholder="Write your complaint/query here..." required autocomplete="off">
+                        <button type="submit" class="btn-send">
+                            Submit <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Logout Modal Overlay -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal-box">
+            <i class="fa-solid fa-power-off" style="font-size: 2.5rem; color: #ef4444;"></i>
+            <h2 style="margin-top: 10px; color: var(--secondary);">Logging Out</h2>
+            <p style="color: var(--text-muted); margin-top: 6px;">You will be redirected securely in...</p>
+            <div class="countdown-circle" id="timer">4</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Please wait while we clear your session.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>West Bengal Medical Counseling Committee</h3>
+                <p><i class="fa-solid fa-building-columns"></i> WBMCC Official Candidate Portal</p>
+                <p><i class="fa-solid fa-clock"></i> Timing: Monday to Friday, 10:00 AM to 6:00 PM</p>
+            </div>
+            <div class="footer-col">
+                <h3>Contact Details</h3>
+                <p><i class="fa-solid fa-envelope"></i> <strong>Official Email:</strong> mcccounseling.gov@gmail.com</p>
+                <p><i class="fa-solid fa-phone"></i> <strong>Contact Number:</strong> +91-855-556-7895</p>
+                <p><i class="fa-solid fa-phone-flip"></i> <strong>Alternate Contact:</strong> +91-855-543-4504</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 West Bengal Medical Counseling Committee (WBMCC). All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Chatbot logic
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userText = chatInput.value.trim();
+
+            if (userText !== "") {
+                // Render User Message
+                const userBubble = document.createElement('div');
+                userBubble.className = 'message-bubble message-user';
+                userBubble.textContent = userText;
+                chatMessages.appendChild(userBubble);
+
+                // Clear Input
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Trigger Automated Bot Reply
+                setTimeout(() => {
+                    const botBubble = document.createElement('div');
+                    botBubble.className = 'message-bubble message-bot';
+                    botBubble.textContent = "Your query is successfully Submitted";
+                    chatMessages.appendChild(botBubble);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 400);
+            }
+        });
+
+        // Logout Countdown Logic
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutModal = document.getElementById('logoutModal');
+        const timerDisplay = document.getElementById('timer');
+        const redirectUrl = "https://www.instagram.com/?hl=en";
+
+        logoutBtn.addEventListener('click', function() {
+            logoutModal.style.display = 'flex';
+            let countdown = 4;
+            timerDisplay.textContent = countdown;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                timerDisplay.textContent = countdown;
+
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = redirectUrl;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
